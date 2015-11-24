@@ -1,0 +1,77 @@
+package ns;
+
+import observer.TaskObserver;
+
+import java.awt.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Part of taskmgr.
+ */
+public class CustomNotificationSystem implements INotificationSystem, Runnable{
+
+    private TaskObserver observer;
+    private ConcurrentHashMap<Integer, Long> map;
+
+    public CustomNotificationSystem() {
+        map = new ConcurrentHashMap<>();
+        new Thread(this).start();
+    }
+
+    @Override
+    public void startTask(int id, Date time) {
+        map.put(id, time.getTime());
+    }
+    @Override
+    public void cancelTask(int id) {
+        map.remove(id);
+    }
+
+    @Override
+    public void delayTask(int id, Date time) {
+        map.remove(id);
+        startTask(id,time);
+    }
+    @Override
+    public void registerObserver(TaskObserver o) {
+        observer = o;
+    }
+
+    @Override
+    public void restartTask(int id, Date date) {
+        if(!map.containsKey(id))
+        {
+            startTask(id,date);
+        }
+    }
+
+    private void checkTimer() {
+        long currentTime = Calendar.getInstance().getTimeInMillis();
+        Iterator<Integer> iterator = map.keySet().iterator();
+        if (iterator.hasNext()) {
+            Integer id = iterator.next();
+            while (iterator.hasNext() && (map.get(id) > currentTime)) {
+                id = iterator.next();
+            }
+            if (map.get(id) <= currentTime) {
+                Toolkit.getDefaultToolkit().beep();
+                observer.update(id);
+            }
+        }
+    }
+    @Override
+    public void run() {
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        while(!Thread.currentThread().isInterrupted()) {
+                checkTimer();
+            try {
+                Thread.sleep(5000); //wait 5 seconds
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+}

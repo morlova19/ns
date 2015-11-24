@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ns:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ns_jar</output-path>
+    <root id="archive" name="ns.jar">
+      <element id="module-output" name="ns" />
+    </root>
+  </artifact>
+</component>
