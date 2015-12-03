@@ -1,28 +1,40 @@
 package utils;
 
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Class for working with date.
+ */
 public class DateUtil {
+    /**
+     * Date format.
+     */
     private static DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
-    //TODO:javadoc
+    /**
+     * Parses string into date.
+     * @param date string with date.
+     * @return date.
+     */
     public static Date parse(String date)
     {
         df.setLenient(false);
         try {
-            Date d = df.parse(date);
-            return d;
+            return df.parse(date);
         } catch (ParseException e) {
             return null;
         }
 
     }
-    //TODO:javadoc
+    /**
+     * Formats date into string.
+     * @param date date.
+     * @return string with date.
+     */
     public static String format(Date date)
     {
         df.setLenient(false);
@@ -35,10 +47,6 @@ public class DateUtil {
      */
     public static boolean isCorrect(Date date)
     {
-        if(date == null)
-        {
-            return false;
-        }
         long delta = date.getTime() - Calendar.getInstance().getTimeInMillis();
         return delta > 0;
     }

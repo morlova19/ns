@@ -5,11 +5,11 @@ package controllers.interfaces;
  */
 public interface IController {
     /**
-     * Starts working.
+     * Starts app.
      */
     void start();
     /**
      * Closes app.
      */
-    void close();
+    void stop();
 }

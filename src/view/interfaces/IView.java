@@ -27,4 +27,9 @@ public interface IView  {
      * Creates view.
      */
     void createView();
+
+    /**
+     * Clears view.
+     */
+    void clearView();
 }

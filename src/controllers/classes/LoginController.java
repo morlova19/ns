@@ -8,6 +8,8 @@ import view.forms.AuthorizationForm;
 import view.interfaces.IView;
 import view.forms.RegistrationForm;
 
+import javax.swing.*;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public class LoginController implements ILoginController {
@@ -27,9 +29,15 @@ public class LoginController implements ILoginController {
     }
 
     @Override
-    public void close() {
-        RegistryUtils.unregisterNSystem();
-        System.exit(1);
+    public void stop() {
+        try {
+            RegistryUtils.unregisterNSystem();
+        } catch (RemoteException | NotBoundException e) {
+            JOptionPane.showMessageDialog(new JFrame(),"Cannot unregister");
+        }
+        finally {
+            System.exit(1);
+        }
     }
 
     public void authorize(String login, char[] pass){
@@ -47,6 +55,7 @@ public class LoginController implements ILoginController {
                     isAuthorized = RegistryUtils.registerNSystem(l, p);
                     System.out.println(isAuthorized);
                     if (isAuthorized) {
+                        aView.clearView();
                         aView.close();
                         observer.update(l);
                     }
@@ -54,7 +63,7 @@ public class LoginController implements ILoginController {
                         aView.showError(Constants.INCORRECT_LOGIN_OR_PASS, Constants.PASS);
                     }
 
-            } catch (RemoteException e) {
+            } catch (RemoteException | NotBoundException e) {
                 aView.showError(Constants.CANNOT_AUTHORIZE, Constants.PASS);
             }
             return;
@@ -92,14 +101,15 @@ public class LoginController implements ILoginController {
             try {
                     isRegistered = RegistryUtils.newUser(login, p);
                     if (isRegistered) {
+                        rView.clearView();
                         rView.close();
 
                     }
                else {
-                    rView.showError(Constants.USER_ALSO_EXIST,Constants.CONFIRM_PASS);
+                    rView.showError(Constants.USER_ALREADY_EXISTS,Constants.CONFIRM_PASS);
                 }
-            } catch (RemoteException e) {
-                rView.showError(Constants.CANNOT_AUTHORIZE, Constants.CONFIRM_PASS);
+            } catch (RemoteException | NotBoundException e) {
+                rView.showError(Constants.CANNOT_REGISTER, Constants.CONFIRM_PASS);
             }
             return;
         }

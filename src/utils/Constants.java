@@ -21,5 +21,6 @@ public final class Constants {
 
 
     public static final String NOT_SAME_PASS = "Passwords are not the same";
-    public static final String USER_ALSO_EXIST = "User also exists";
+    public static final String USER_ALREADY_EXISTS = "User already exists";
+    public static final String CANNOT_REGISTER = "Cannot register, trying again later.";
 }

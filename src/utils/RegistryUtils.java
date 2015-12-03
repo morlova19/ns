@@ -1,9 +1,9 @@
 package utils;
 
 
-import callback_impl.CallbackClientImpl;
-import callback.ICallbackClient;
-import callback.ICallbackServer;
+import client_impl.Client;
+import client.IClient;
+import server.IServer;
 import journal.IJournalManager;
 
 import javax.swing.*;
@@ -17,53 +17,39 @@ import java.rmi.registry.Registry;
  */
 public class RegistryUtils {
     private static Registry registry;
-    private static ICallbackServer server;
-    private static ICallbackClient client;
+    private static IServer server;
+    private static IClient client;
     private static IJournalManager manager;
 
-    private static ICallbackServer getServerInstance() {
+    private static IServer getServerInstance() throws RemoteException, NotBoundException {
         getRegistryInstance();
         if(server == null)
         {
-            try {
-                server = (ICallbackServer) registry.lookup("IAuthorizationService");
-            } catch (RemoteException | NotBoundException e) {
-                server = null;
-            }
+            server = (IServer) registry.lookup("IAuthorizationService");
         }
         return server;
     }
-    public static IJournalManager getJournalManagerInstance(String login)
-    {
+    public static IJournalManager getJournalManagerInstance(String login) throws RemoteException, NotBoundException {
         getRegistryInstance();
         if(manager == null)
         {
-            try {
-                manager = (IJournalManager) registry.lookup(login);
-            } catch (RemoteException | NotBoundException e) {
-                JOptionPane.showMessageDialog(new JFrame(),"Server are not available");
-            }
+            manager = (IJournalManager) registry.lookup(login);
         }
         return manager;
     }
 
-    private static void getRegistryInstance() {
+    private static void getRegistryInstance() throws RemoteException {
         if(registry == null)
         {
-            try {
-                registry = LocateRegistry.getRegistry("localhost", 7777);
-
-            } catch (RemoteException e) {
-                registry = null;
-            }
+            registry = LocateRegistry.getRegistry("localhost", 7777);
         }
     }
 
-    public static boolean registerNSystem(String login, String pass) throws RemoteException {
+    public static boolean registerNSystem(String login, String pass) throws RemoteException, NotBoundException {
         getServerInstance();
         if(client == null)
         {
-            client = new CallbackClientImpl(login, pass);
+            client = new Client(login, pass);
             if(server != null) {
                 return server.registerNotificationSystem(client);
             }
@@ -78,23 +64,18 @@ public class RegistryUtils {
         }
 
     }
-    public static void unregisterNSystem()
-    {
+    public static void unregisterNSystem() throws RemoteException, NotBoundException {
         getServerInstance();
         if(client != null)
         {
-            try {
                 server.unregisterNotificationSystem(client);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
         }
     }
-    public static boolean newUser(String login, String pass) throws RemoteException {
+    public static boolean newUser(String login, String pass) throws RemoteException, NotBoundException {
         getServerInstance();
         if(server != null)
         {
-            return server.newUser(new CallbackClientImpl(login, pass));
+            return server.newUser(new Client(login, pass));
         }
         return false;
     }

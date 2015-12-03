@@ -55,6 +55,16 @@ public class RegistrationForm extends JDialog implements IView,ActionListener, C
     }
 
     @Override
+    public void clearView() {
+        loginTextField.setText("");
+        passwordField.setText("");
+        confirmPasswordField.setText("");
+        login_err_label.setText("");
+        pass_err_label.setText("");
+        conf_pass_err_label.setText("");
+    }
+
+    @Override
     public void open() {
         pack();
         setVisible(true);
@@ -62,6 +72,7 @@ public class RegistrationForm extends JDialog implements IView,ActionListener, C
 
     @Override
     public void close() {
+
         dispose();
     }
 
@@ -118,7 +129,7 @@ public class RegistrationForm extends JDialog implements IView,ActionListener, C
         pack();
     }
     public void showConfirmPassError(String error) {
-        if(!error.equals(Constants.USER_ALSO_EXIST)) {
+        if(!error.equals(Constants.USER_ALREADY_EXISTS)) {
             confirmPasswordField.setBorder(BorderFactory.createLineBorder(Color.red));
         }
         conf_pass_err_label.setText(error);

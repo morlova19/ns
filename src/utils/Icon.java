@@ -5,8 +5,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-//TODO: javadoc
-public class Icon {
+/**
+ * Class that loads and stores icon of app.
+ */
+public class Icon  {
     /**
      * Icon of the app.
      */

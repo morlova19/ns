@@ -13,7 +13,10 @@ import model.IModel;
 import ns.INotificationSystem;
 import observer.TaskObserver;
 
+import javax.swing.*;
 import java.awt.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -62,8 +65,14 @@ public class TaskController implements ITaskController, TaskObserver {
             MenuItem exitItem = new MenuItem(Constants.EXIT);
             popupMenu.add(exitItem);
             exitItem.addActionListener(e -> {
-                RegistryUtils.unregisterNSystem();
-                System.exit(1);
+                try {
+                    RegistryUtils.unregisterNSystem();
+                } catch (RemoteException | NotBoundException e1) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Server are not available");
+                }
+                finally {
+                    System.exit(1);
+                }
             });
 
             TrayIcon trayIcon = new TrayIcon(img, Constants.APP_TITLE,popupMenu);
@@ -148,8 +157,14 @@ public class TaskController implements ITaskController, TaskObserver {
     }
 
     @Override
-    public void close() {
-        RegistryUtils.unregisterNSystem();
-        System.exit(1);
+    public void stop() {
+        try {
+            RegistryUtils.unregisterNSystem();
+        } catch (RemoteException | NotBoundException e) {
+            JOptionPane.showMessageDialog(new JFrame(), "Server are not available");
+        }
+        finally {
+            System.exit(1);
+        }
     }
 }

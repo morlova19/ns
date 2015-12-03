@@ -209,4 +209,7 @@ public class MessageDialog extends JDialog implements IMessageView,ActionListene
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     }
+
+    @Override
+    public void clearView() {}
 }

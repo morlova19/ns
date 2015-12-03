@@ -96,8 +96,15 @@ public class AuthorizationForm extends JFrame implements IView, ActionListener, 
         setLocationRelativeTo(null);
     }
 
+    @Override
+    public void clearView() {
+        loginTextField.setText("");
+        passwordField.setText("");
+        login_err_label.setText("");
+        pass_err_label.setText("");
+    }
+
     public void resetLoginError() {
-        //TODO:set default border
         loginTextField.setBorder(UIManager.getBorder("TextField.border"));
         login_err_label.setForeground(Color.red);
         login_err_label.setText("");
@@ -107,7 +114,6 @@ public class AuthorizationForm extends JFrame implements IView, ActionListener, 
 
 
     public void resetPassError() {
-        //TODO: set default border
         passwordField.setBorder(UIManager.getBorder("TextField.border"));
         pass_err_label.setForeground(Color.red);
         pass_err_label.setText("");
