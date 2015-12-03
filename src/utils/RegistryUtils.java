@@ -6,6 +6,7 @@ import callback.ICallbackClient;
 import callback.ICallbackServer;
 import journal.IJournalManager;
 
+import javax.swing.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -40,7 +41,7 @@ public class RegistryUtils {
             try {
                 manager = (IJournalManager) registry.lookup(login);
             } catch (RemoteException | NotBoundException e) {
-                manager = null;
+                JOptionPane.showMessageDialog(new JFrame(),"Server are not available");
             }
         }
         return manager;
@@ -63,7 +64,13 @@ public class RegistryUtils {
         if(client == null)
         {
             client = new CallbackClientImpl(login, pass);
-            return server.registerNotificationSystem(client);
+            if(server != null) {
+                return server.registerNotificationSystem(client);
+            }
+            else {
+                JOptionPane.showMessageDialog(new JFrame(),"Server are not available");
+                return false;
+            }
 
         }
         else {

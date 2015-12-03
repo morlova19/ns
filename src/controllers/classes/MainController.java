@@ -6,6 +6,7 @@ import controllers.interfaces.ITaskController;
 import journal.IJournalManager;
 import model.IModel;
 import model.Model;
+import ns.CustomNotificationSystem;
 import ns.NotificationSystem;
 import observer.Observer;
 import utils.RegistryUtils;
@@ -29,7 +30,7 @@ public class MainController implements IController, Observer {
         IJournalManager manager = RegistryUtils.getJournalManagerInstance(login);
         if (manager != null) {
             IModel model = new Model(manager);
-            ITaskController tc = new TaskController(model,new NotificationSystem());
+            ITaskController tc = new TaskController(model,new CustomNotificationSystem());
             tc.start();
         }
     }

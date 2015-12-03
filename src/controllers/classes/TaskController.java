@@ -94,9 +94,9 @@ public class TaskController implements ITaskController, TaskObserver {
         else
         {
             view.resetError(Constants.DATE);
-            Task t = model.get(id);
             model.delay(id, newDate);
-            nSystem.delayTask(t.getID(),t.getDate());
+            Task t = model.get(id);
+            nSystem.delayTask(t.getID(), t.getDate());
             view.close();
         }
 
@@ -118,6 +118,7 @@ public class TaskController implements ITaskController, TaskObserver {
     @Override
     public void update(int id) {
         Task t = model.get(id);
+        //System.out.println(t.getDate());
         if(t != null) {
             view.displayTaskName(t.getName());
             view.displayTaskDesc(t.getDescription());
@@ -125,7 +126,6 @@ public class TaskController implements ITaskController, TaskObserver {
             view.displayTaskContacts(t.getContacts());
             view.setId(id);
             view.open();
-            return;
         }
     }
 

@@ -57,10 +57,8 @@ public class NotificationSystem implements INotificationSystem{
 
     @Override
     public void restartTask(int id, Date date) {
-        System.out.println("restart " + new Date());
-        if(!map.containsKey(id))
-        {
-            startTask(id, date);
-        }
+        map.clear();
+        startTask(id, date);
+
     }
 }

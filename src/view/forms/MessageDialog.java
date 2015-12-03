@@ -132,6 +132,10 @@ public class MessageDialog extends JDialog implements IMessageView,ActionListene
 
     @Override
     public void open() {
+        setResizable(false);
+
+        setModal(true);
+        setAlwaysOnTop(true);
         pack();
         setVisible(true);
     }
@@ -204,9 +208,5 @@ public class MessageDialog extends JDialog implements IMessageView,ActionListene
 
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-
-        setResizable(false);
-        setAlwaysOnTop(true);
-        setModal(true);
     }
 }

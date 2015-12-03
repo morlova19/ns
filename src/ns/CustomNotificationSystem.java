@@ -33,7 +33,7 @@ public class CustomNotificationSystem implements INotificationSystem, Runnable{
     @Override
     public void delayTask(int id, Date time) {
         map.remove(id);
-        startTask(id,time);
+        startTask(id, time);
     }
     @Override
     public void registerObserver(TaskObserver o) {
@@ -42,9 +42,14 @@ public class CustomNotificationSystem implements INotificationSystem, Runnable{
 
     @Override
     public void restartTask(int id, Date date) {
+
         if(!map.containsKey(id))
         {
             startTask(id,date);
+        }
+        else {
+            map.remove(id);
+            startTask(id, date);
         }
     }
 
