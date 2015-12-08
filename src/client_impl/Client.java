@@ -25,7 +25,7 @@ public class Client extends UnicastRemoteObject implements IClient, Serializable
         try {
             manager = RegistryUtils.getJournalManagerInstance(login);
         } catch (RemoteException | NotBoundException e) {
-            JOptionPane.showMessageDialog(new JFrame(),"Cannot get journal, trying later again.");
+            JOptionPane.showMessageDialog(new JFrame(),"Cannot get journal, try later again.");
         }
         if (manager != null) {
             TaskController.getInstance().updateModel(manager);
