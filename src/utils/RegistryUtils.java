@@ -23,7 +23,6 @@ import java.util.Base64;
  * Class to work with rmi registry.
  */
 public class RegistryUtils {
-    private static final String ALGO = "RSA";
     private static Registry registry;
     private static IServer server;
     private static IClient client;
@@ -57,20 +56,11 @@ public class RegistryUtils {
         getServerInstance();
         if(client == null)
         {
-           // client = new Client(login, pass);
             try {
-                KeyFactory keyFactory = KeyFactory.getInstance(ALGO);
-                byte[] public_key_bytes = Base64.getDecoder().decode(server.getPublicKey());
-
-                X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(public_key_bytes);
-                PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-
-                String pass1 = encrypt(pass,publicKey);
-                client = new Client(login, pass1);
-            } catch (NoSuchAlgorithmException e) {
-               // e.printStackTrace();
-            } catch (InvalidKeySpecException e) {
-              //  e.printStackTrace();
+                String pass_encrypted = EncryptionUtils.encrypt(pass, server.getPublicKey());
+                client = new Client(login, pass_encrypted);
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                return false;
             }
             if(server != null) {
                 return server.registerNotificationSystem(client);
@@ -97,40 +87,15 @@ public class RegistryUtils {
         getServerInstance();
         if(server != null)
         {
-            KeyFactory keyFactory = null;
-            try {
-                keyFactory = KeyFactory.getInstance(ALGO);
-                byte[] public_key_bytes = Base64.getDecoder().decode(server.getPublicKey());
-                X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(public_key_bytes);
-                PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
-                String encrypted_pass = encrypt(pass,publicKey);
-                return server.newUser(new Client(login, encrypted_pass));
-            } catch (NoSuchAlgorithmException e) {
-                //e.printStackTrace();
-            } catch (InvalidKeySpecException e) {
-               // e.printStackTrace();
-            }
 
-            //  return server.newUser(new Client(login, pass));
+            try {
+                String encrypted_pass = EncryptionUtils.encrypt(pass, server.getPublicKey());
+                return server.newUser(new Client(login, encrypted_pass));
+            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                return false;
+            }
         }
         return false;
     }
 
-    /**
-     * Encrypts specified password with specified public key.
-     * @param pass password.
-     * @param key public key.
-     * @return encrypted password.
-     */
-    private static String encrypt(String pass, PublicKey key) {
-        byte[] cipherText = null;
-        try {
-            final Cipher cipher = Cipher.getInstance(ALGO);
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-            cipherText = cipher.doFinal(pass.getBytes("UTF-8"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return Base64.getEncoder().encodeToString(cipherText);
-    }
 }
